@@ -1,0 +1,25 @@
+on: [push]
+
+permissions:
+    issues: write
+
+jobs:
+    myjob:
+      runs-on: ubuntu-latest
+      steps:
+        # - name: Generate token
+        #   id: generate_token
+        #   uses: tibdex/github-app-token@v1
+        #   with:
+        #     app_id: ${{ secrets.APP_ID }}
+        #     private_key: ${{ secrets.APP_PRIVATE_KEY }}
+        - name: Wait for approval
+          uses: trstringer/manual-approval@v1
+          with:
+            # secret: ${{ steps.generate_token.outputs.token }}
+            secret: ${{ secrets.GITHUB_TOKEN }}
+            timeout-minutes: 1
+            approvers: George-Smirnoff
+            minimum-approvals: 1
+            issue-title: "Trigger the pod restart on <env> in <NS> <res> with label <>"
+            issue-body: "TEST body"
