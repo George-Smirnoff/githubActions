@@ -1,0 +1,16 @@
+on: [push]
+
+env:
+  who_to_greet: George
+
+jobs:
+  use_common_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: George-Smirnoff/githubActions/.github/workflows/reusable-workflow copy.yaml@main
+        with:
+          who_to_greet: ${{ env.who_to_greet }}
+      - name: A job to say goodbye
+        run: echo "Goodbye ${{ env.who_to_greet }}!"
+        shell: bash
