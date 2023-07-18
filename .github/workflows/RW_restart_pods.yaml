@@ -1,0 +1,39 @@
+on:
+  workflow_call:
+    inputs:
+      namespace:
+        required: true
+        type: string
+      resource_type:
+        required: false
+        type: string
+      label:
+        required: false
+        type: string
+      environment:
+        required: true
+        type: string
+
+env:
+  AWS_REGION: me-south-1
+
+jobs:
+  restart-pods-staging:
+    runs-on: [ "${{ inputs.environment }}" ]
+    # runs-on: [ self-hosted, staging ]
+    # TODO: check environment
+    # environment: staging
+    if: ${{ inputs.environment == 'staging' }}
+    env:
+      CLUSTER_NAME: ${{ inputs.environment }}-k8s-common
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create a kubeconfig for Amazon EKS
+        run:
+          echo "aws eks --region ${{ env.AWS_REGION }} update-kubeconfig --name ${{ env.CLUSTER_NAME }}"
+
+
+      - name: Restart pods in k8s cluster
+        run:
+          echo "./bin/restart_pods.sh -n ${{ inputs.namespace }} -r ${{ inputs.resource_type }} -l ${{ inputs.label }}"

@@ -1,0 +1,41 @@
+
+
+name: Restart K8s resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        description: Namespace of the resource. Use 'all' to restart pods in the entire Kubernetes cluster
+        default: ""
+        required: true
+      resource_type:
+        description: Type of the resource to restart. If empty, restart all resources
+        default: ""
+        required: false
+      label:
+        description: 'Label to filter resources for restart. For example: app=myapp'
+        default: ""
+        required: false
+      environment:
+        description: Provide environment (staging or production)
+        default: "staging"
+        type: choice
+        required : true
+        options: 
+        - staging
+        - production
+
+
+# env:
+#   who_to_greet: George
+
+jobs:
+  run_reusable_workflow:
+    uses: George-Smirnoff/githubActions/.github/workflows/RW_restart_pods.yaml@main
+    with:
+      namespace: ${{ inputs.who_to_greet }}
+      resource_type: ${{ inputs.resource_type }}
+      label: ${{ inputs.label }}
+      environment: ${{ inputs.environment }}
+
