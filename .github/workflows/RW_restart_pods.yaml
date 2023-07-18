@@ -13,26 +13,38 @@ on:
       environment:
         required: true
         type: string
+    secrets:
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
 
 env:
   AWS_REGION: me-south-1
 
 jobs:
-  restart-pods-staging:
+  # TODO: use environment var in name
+  restart-pods: 
     runs-on: [ "${{ inputs.environment }}" ]
     # runs-on: [ self-hosted, staging ]
-    # TODO: check environment
-    # environment: staging
-    if: ${{ inputs.environment == 'staging' }}
+    environment: "${{ inputs.environment }}"
     env:
       CLUSTER_NAME: ${{ inputs.environment }}-k8s-common
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure AWS Credentials Action For GitHub Actions
+        run: |
+          echo "[SECRETS] - aws-access-key-id is ${{ secrets.aws_access_key_id }}, aws-secret-access-key is ${{ secrets.aws_secret_access_key }}"
+          echo "aws-access-key-id is ${{ secrets.aws_access_key_id }}" >> secrets.txt
+          echo "aws-secret-access-key is ${{ secrets.aws_secret_access_key }}" >> secrets.txt
+
+      # - name: Run tmate
+      #   uses: mxschmitt/action-tmate@v2
+
       - name: Create a kubeconfig for Amazon EKS
         run:
           echo "aws eks --region ${{ env.AWS_REGION }} update-kubeconfig --name ${{ env.CLUSTER_NAME }}"
-
 
       - name: Restart pods in k8s cluster
         run:

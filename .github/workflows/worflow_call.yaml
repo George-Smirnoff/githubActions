@@ -25,17 +25,45 @@ on:
         options: 
         - staging
         - production
+        - ubuntu-latest
 
 
 # env:
 #   who_to_greet: George
 
 jobs:
-  run_reusable_workflow:
-    uses: George-Smirnoff/githubActions/.github/workflows/RW_restart_pods.yaml@main
+  run_reusable_workflow_ubuntu:
+    if: ${{ inputs.environment == 'ubuntu-latest' }}
+    uses: ./.github/workflows/RW_restart_pods.yaml
     with:
-      namespace: ${{ inputs.who_to_greet }}
+      namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
       label: ${{ inputs.label }}
       environment: ${{ inputs.environment }}
+    secrets:
+      aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
+      aws_secret_access_key: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_SECRET }}
 
+  run_reusable_workflow_staging:
+    if: ${{ inputs.environment == 'staging' }}
+    uses: George-Smirnoff/githubActions/.github/workflows/RW_restart_pods.yaml@main
+    with:
+      namespace: ${{ inputs.namespace }}
+      resource_type: ${{ inputs.resource_type }}
+      label: ${{ inputs.label }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
+      aws_secret_access_key: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_SECRET }}
+
+  run_reusable_workflow_production:
+    if: ${{ inputs.environment == 'production' }}
+    uses: George-Smirnoff/githubActions/.github/workflows/RW_restart_pods.yaml@main
+    with:
+      namespace: ${{ inputs.namespace }}
+      resource_type: ${{ inputs.resource_type }}
+      label: ${{ inputs.label }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
+      aws_secret_access_key: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_SECRET }}
