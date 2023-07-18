@@ -1,16 +1,28 @@
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      who_to_greet:
+        required: true
+        type: string
 
-env:
-  who_to_greet: George
+# env:
+#   who_to_greet: George
 
 jobs:
-  use_common_workflow:
+  checkout:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: George-Smirnoff/githubActions/.github/workflows/reusable-workflow copy.yaml@main
-        with:
-          who_to_greet: ${{ env.who_to_greet }}
+
+
+  reusable_workflow:
+    uses: George-Smirnoff/githubActions/.github/workflows/reusable-workflow.yaml@main
+    with:
+      who_to_greet: ${{ inputs.who_to_greet }}
+    
+  goodbye:
+    runs-on: ubuntu-latest
+    steps:  
       - name: A job to say goodbye
-        run: echo "Goodbye ${{ env.who_to_greet }}!"
+        run: echo "Goodbye ${{ inputs.who_to_greet }}!"
         shell: bash
