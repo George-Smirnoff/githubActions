@@ -4,20 +4,20 @@ on:
       namespace:
         required: true
         type: string
-      resource_type:
-        required: false
-        type: string
-      label:
-        required: false
-        type: string
+      # resource_type:
+      #   required: false
+      #   type: string
+      # label:
+      #   required: false
+      #   type: string
       environment:
         required: true
         type: string
     secrets:
       aws_access_key_id:
         required: true
-      aws_secret_access_key:
-        required: true
+      # aws_secret_access_key:
+      #   required: true
 
 env:
   AWS_REGION: me-south-1
