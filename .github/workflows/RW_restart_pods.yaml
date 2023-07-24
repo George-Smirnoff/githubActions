@@ -10,6 +10,9 @@ on:
       label:
         required: false
         type: string
+      cluster:
+        required: true
+        type: string
       environment:
         required: true
         type: string
@@ -25,11 +28,11 @@ env:
 jobs:
   # TODO: use environment var in name
   restart-pods: 
-    runs-on: [ "${{ inputs.environment }}" ]
+    runs-on: [ "${{ inputs.cluster }}" ]
     # runs-on: [ self-hosted, staging ]
-    # environment: "${{ inputs.environment }}"
+    environment: "${{ inputs.environment }}"
     env:
-      CLUSTER_NAME: ${{ inputs.environment }}-k8s-common
+      CLUSTER_NAME: ${{ inputs.cluster }}-k8s-common
     steps:
       - uses: actions/checkout@v3
 

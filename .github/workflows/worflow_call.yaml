@@ -17,14 +17,23 @@ on:
         description: 'Label to filter resources for restart. For example: app=myapp'
         default: ""
         required: false
-      environment:
-        description: Provide environment (staging or production)
+      cluster:
+        description: Set a variable to specify the cluster and runners (staging or production)
         default: "staging"
         type: choice
         required : true
         options: 
         - staging
         - production
+        - ubuntu-latest
+      environment:
+        description: Set a Github environment with protection rules and secrets (staging or production)
+        default: "staging"
+        type: choice
+        required : true
+        options: 
+        - infra_staging
+        - infra_production
         - ubuntu-latest
 
 
@@ -35,11 +44,11 @@ jobs:
   run_reusable_workflow_ubuntu:
     if: ${{ inputs.environment == 'ubuntu-latest' }}
     uses: ./.github/workflows/RW_restart_pods.yaml
-    environment: "${{ inputs.environment }}"
     with:
       namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
       label: ${{ inputs.label }}
+      cluster: ${{ inputs.cluster }}
       environment: ${{ inputs.environment }}
     secrets:
       aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
@@ -52,6 +61,7 @@ jobs:
       namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
       label: ${{ inputs.label }}
+      cluster: ${{ inputs.cluster }}
       environment: ${{ inputs.environment }}
     secrets:
       aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
@@ -64,6 +74,7 @@ jobs:
       namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
       label: ${{ inputs.label }}
+      cluster: ${{ inputs.cluster }}
       environment: ${{ inputs.environment }}
     secrets:
       aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
