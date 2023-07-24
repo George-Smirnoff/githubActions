@@ -35,6 +35,7 @@ jobs:
   run_reusable_workflow_ubuntu:
     if: ${{ inputs.environment == 'ubuntu-latest' }}
     uses: ./.github/workflows/RW_restart_pods.yaml
+    environment: "${{ inputs.environment }}"
     with:
       namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
@@ -46,7 +47,7 @@ jobs:
 
   run_reusable_workflow_staging:
     if: ${{ inputs.environment == 'staging' }}
-    uses: George-Smirnoff/githubActions/.github/workflows/RW_restart_pods.yaml@main
+    uses: ./.github/workflows/RW_restart_pods.yaml
     with:
       namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
@@ -58,7 +59,7 @@ jobs:
 
   run_reusable_workflow_production:
     if: ${{ inputs.environment == 'production' }}
-    uses: George-Smirnoff/githubActions/.github/workflows/RW_restart_pods.yaml@main
+    uses: ./.github/workflows/RW_restart_pods.yaml
     with:
       namespace: ${{ inputs.namespace }}
       resource_type: ${{ inputs.resource_type }}
