@@ -2,9 +2,9 @@ name: Monthly issue metrics
 
 on: [push, workflow_dispatch]
 
-permissions:
-  issues: write
-  pull-requests: read
+# permissions:
+#   issues: write
+#   pull-requests: read
 
 jobs:
   build:
