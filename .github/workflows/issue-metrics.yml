@@ -13,10 +13,14 @@ jobs:
 
     steps:
     - name: Run issue-metrics tool
+      id: issue-metrics
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SEARCH_QUERY: 'repo:George-Smirnoff/githubActions is:pr created:2023-08-01..2023-08-31'
+
+    - name: Print output of issue metrics tool
+      run: echo "${{ steps.issue-metrics.outputs.metrics }}"
 
     # - name: Create issue
     #   uses: peter-evans/create-issue-from-file@v4
