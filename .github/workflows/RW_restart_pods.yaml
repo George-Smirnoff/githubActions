@@ -29,7 +29,6 @@ jobs:
   # TODO: use environment var in name
   restart-pods: 
     runs-on: [ "${{ inputs.cluster }}" ]
-    # runs-on: [ self-hosted, staging ]
     environment: "${{ inputs.environment }}"
     env:
       CLUSTER_NAME: ${{ inputs.cluster }}-k8s-common
