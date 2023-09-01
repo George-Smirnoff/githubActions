@@ -35,7 +35,7 @@ jobs:
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SEARCH_QUERY: 'repo:George-Smirnoff/githubActions is:pr created:${{ env.last_two_month }}'
+        SEARCH_QUERY: 'repo:${{ github.repository }} is:pr created:${{ env.last_two_month }}'
 
     - name: Print output to job summary 
       run: |
