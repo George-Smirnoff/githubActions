@@ -21,21 +21,21 @@ jobs:
       shell: bash
       run: |
         # Calculate the day from two months ago
-        last_two_month=$(date -d "2 months ago" +%Y-%m-01)
+        TWO_MONTH_AGO=$(date -d "2 months ago" +%Y-%m-01)
 
-        # Get today's date
-        today=$(date +%Y-%m-%d)
+        # Calculate today's date
+        TODAY=$(date +%Y-%m-%d)
 
         #Set an environment variable with the date range
-        echo "$last_two_month..$today"
-        echo "last_two_month=$last_two_month..$today" >> "$GITHUB_ENV"
+        echo "$TWO_MONTH_AGO..$TODAY"
+        echo "LAST_TWO_MONTH=$TWO_MONTH_AGO..$TODAY" >> "$GITHUB_ENV"
 
     - name: Run issue-metrics tool
       id: issue-metrics
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SEARCH_QUERY: 'repo:${{ github.repository }} is:pr created:${{ env.last_two_month }}'
+        SEARCH_QUERY: 'repo:${{ github.repository }} is:pr created:${{ env.LAST_TWO_MONTH }}'
 
     - name: Print output to job summary 
       run: |
