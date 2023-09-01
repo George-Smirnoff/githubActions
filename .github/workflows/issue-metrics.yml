@@ -1,40 +1,41 @@
 name: Monthly issue metrics
 
-on: 
+on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: 15 5 * * 1-5
 
-# permissions:
-#   issues: write
-#   pull-requests: read
+permissions:
+  issues: read
+  pull-requests: read
 
 jobs:
   build:
     name: issue metrics
-    permissions: write-all
+    # permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get dates for last month
+    - name: Get dates for last two month
       shell: bash
       run: |
-        # Calculate the first day of the previous month
-        first_day=$(date -d "last month" +%Y-%m-01)
+        # Calculate the day from two months ago
+        last_two_month=$(date -d "2 months ago" +%Y-%m-01)
 
-        # Calculate the last day of the previous month
-        last_day=$(date -d "$first_day +1 month -1 day" +%Y-%m-%d)
+        # Get today's date
+        today=$(date +%Y-%m-%d)
 
         #Set an environment variable with the date range
-        echo "$first_day..$last_day"
-        echo "last_month=$first_day..$last_day" >> "$GITHUB_ENV"
+        echo "$last_two_month..$today"
+        echo "last_two_month=$last_two_month..$today" >> "$GITHUB_ENV"
 
     - name: Run issue-metrics tool
       id: issue-metrics
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SEARCH_QUERY: 'repo:George-Smirnoff/githubActions is:pr state:open created:2023-08-01..2023-08-31'
+        SEARCH_QUERY: 'repo:George-Smirnoff/githubActions is:pr created:${{ env.last_two_month }}'
 
     - name: Print output to job summary 
       run: |
