@@ -1,4 +1,4 @@
-name: Monthly issue metrics
+name: Issue metrics report
 
 on:
   push:
@@ -12,8 +12,7 @@ permissions:
 
 jobs:
   build:
-    name: issue metrics
-    # permissions: write-all
+    name: Issue metrics report
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +25,7 @@ jobs:
         # Calculate today's date
         TODAY=$(date +%Y-%m-%d)
 
-        #Set an environment variable with the date range
+        # Set an environment variable with the date range
         echo "$TWO_MONTH_AGO..$TODAY"
         echo "LAST_TWO_MONTH=$TWO_MONTH_AGO..$TODAY" >> "$GITHUB_ENV"
 
@@ -38,8 +37,7 @@ jobs:
         SEARCH_QUERY: 'repo:${{ github.repository }} is:pr created:${{ env.LAST_TWO_MONTH }}'
 
     - name: Print output to job summary 
-      run: |
-        cat ./issue_metrics.md >> $GITHUB_STEP_SUMMARY
+      run: cat ./issue_metrics.md >> $GITHUB_STEP_SUMMARY
 
     # - name: Print output of issue metrics tool
     #   run: |
