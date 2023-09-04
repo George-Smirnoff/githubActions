@@ -13,6 +13,6 @@ permissions:
 
 jobs:
   issue-metrics-report:
-    uses: ./.github/workflows/RW_issue_metrics.yml
+    uses: George-Smirnoff/reusable-workflows/.github/workflows/RW_issue_metrics.yml@0841db265a45d7173ed7b03f960d45155d7012af
     with:
       repository_path: ${{ github.repository }}

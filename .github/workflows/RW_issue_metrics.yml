@@ -4,6 +4,7 @@ on:
       repository_path:
         required: true
         type: string
+      # TODO: add variable with default to configure the data range
 
 jobs:
   create-report: 
