@@ -6,7 +6,7 @@ on:
         type: string
 
 jobs:
-  restart-pods: 
+  create-report: 
     runs-on: ubuntu-latest
     steps:
       - name: Get dates for last two month
