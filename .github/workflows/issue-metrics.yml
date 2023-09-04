@@ -1,22 +1,58 @@
-name: Monthly issue metrics
+name: Issue metrics report
+
 on:
+  # push:
   workflow_dispatch:
+  # schedule:
+  #   - cron: 15 5 * * 1-5
 
 permissions:
-  issues: write
+  issues: read
   pull-requests: read
 
 jobs:
   build:
-    name: issue metrics
+    name: Issue metrics report
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get dates for last two month
+      shell: bash
+      run: |
+        # Calculate the day from two months ago
+        TWO_MONTH_AGO=$(date -d "2 months ago" +%Y-%m-01)
+
+        # Calculate today's date
+        TODAY=$(date +%Y-%m-%d)
+
+        # Set an environment variable with the date range
+        echo "$TWO_MONTH_AGO..$TODAY"
+        echo "LAST_TWO_MONTH=$TWO_MONTH_AGO..$TODAY" >> "$GITHUB_ENV"
+
     - name: Run issue-metrics tool
+      id: issue-metrics
       uses: github/issue-metrics@v2
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SEARCH_QUERY: 'repo:owner/repo is:pr created:2023-08-01..2023-08-31'
+        SEARCH_QUERY: 'repo:${{ github.repository }} is:pr created:${{ env.LAST_TWO_MONTH }}'
+
+    - name: Print output to job summary 
+      run: cat ./issue_metrics.md >> $GITHUB_STEP_SUMMARY
+
+    # - name: Print output of issue metrics tool
+    #   run: |
+    #     echo "${{ steps.issue-metrics.outputs.metrics }}" 
+    #     echo "${{ context.repo.repo }}" 
+
+    # - uses: actions/github-script@v6
+    #   with:
+    #     script: |
+    #       github.rest.issues.createComment({
+    #         issue_number: context.issue.number,
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: '${{ steps.issue-metrics.outputs.metrics }}'
+    #       })
 
     # - name: Create issue
     #   uses: peter-evans/create-issue-from-file@v4
