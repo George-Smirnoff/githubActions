@@ -1,0 +1,18 @@
+name: Issue metrics report
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: 15 5 * * 1-5
+
+permissions:
+  issues: read
+  pull-requests: read
+
+
+jobs:
+  issue-metrics-report:
+    uses: ./.github/workflows/RW_issue_metrics.yml
+    with:
+      repository_path: ${{ github.repository }}
