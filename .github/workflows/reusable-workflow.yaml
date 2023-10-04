@@ -6,7 +6,7 @@ on:
         type: string
   push:
     branches:
-      - main
+      - workflow-call-and-push
 
 
 jobs:

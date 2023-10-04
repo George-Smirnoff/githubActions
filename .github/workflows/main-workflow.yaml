@@ -16,7 +16,7 @@ jobs:
 
 
   reusable_workflow:
-    uses: George-Smirnoff/githubActions/.github/workflows/reusable-workflow.yaml@main
+    uses: ./.github/workflows/reusable-workflow.yaml
     with:
       who_to_greet: ${{ inputs.who_to_greet }}
     
