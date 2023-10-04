@@ -77,3 +77,4 @@ jobs:
     secrets:
       aws_access_key_id: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_KEY }}
       aws_secret_access_key: ${{ secrets.PRODUCTION_CI_DEPLOYER_ACCESS_SECRET }}
+
