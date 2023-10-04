@@ -4,6 +4,9 @@ on:
       who_to_greet:
         required: true
         type: string
+  push:
+    branches:
+      - main
 
 
 jobs:
