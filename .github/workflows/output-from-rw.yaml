@@ -2,13 +2,24 @@ name: Call a reusable workflow and use its outputs
 
 on:
   workflow_dispatch:
+    inputs:
+      aws_credentials:
+        description: AWS programmatic access credentials
+        required: true
+        type: string
 
 jobs:
   job1:
     uses: ./.github/workflows/rw-output-from-rw.yaml
+    with:
+      aws_credentials: ${{ inputs.aws_credentials }}
 
   job2:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
     needs: job1
-    steps:
-      - run: echo ${{ needs.job1.outputs.firstword }} and ${{ needs.job1.outputs.secondword }}
+    uses: ./.github/workflows/rw-output-from-rw-2.yaml
+    with:
+      firstword: ${{ needs.job1.outputs.firstword }}
+      secondword: ${{ needs.job1.outputs.secondword }}
+    # steps:
+    #   - run: echo ${{ needs.job1.outputs.firstword }} and ${{ needs.job1.outputs.secondword }}

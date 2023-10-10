@@ -2,6 +2,10 @@ name: Reusable workflow
 
 on:
   workflow_call:
+    inputs:
+      aws_credentials:
+        type: string
+        required: true
     # Map the workflow outputs to job outputs
     outputs:
       firstword:
@@ -21,6 +25,6 @@ jobs:
       output2: ${{ steps.step2.outputs.secondword }}
     steps:
       - id: step1
-        run: echo "firstword=hello" >> $GITHUB_OUTPUT
+        run: echo "firstword=${{ inputs.aws_credentials }}" >> $GITHUB_OUTPUT
       - id: step2
         run: echo "secondword=world" >> $GITHUB_OUTPUT

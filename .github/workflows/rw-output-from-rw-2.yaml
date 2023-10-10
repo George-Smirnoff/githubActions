@@ -1,0 +1,19 @@
+name: Reusable workflow
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    inputs:
+      firstword:
+        type: string
+        required: true
+      secondword:
+        type: string
+        required: true
+
+jobs:
+  example_job:
+    name: Print output
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ inputs.firstword }} and ${{ inputs.secondword }}
