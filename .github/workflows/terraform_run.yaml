@@ -29,6 +29,13 @@ jobs:
       #   aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
       #   aws-session-token: ${{ secrets.aws_session_token }}
 
+      - name: Checkout submodules
+        run: |
+          PROJECT_DIR=${{ github.workspace }}
+          $PROJECT_DIR/scripts/submodule_checkout.sh "modules/external/tf-aws-github-actions" "${{ secrets.DT_TF_GITHUBACTIONS }}"
+
+      - uses: mxschmitt/action-tmate@v3
+
       - name: Terraform Init
         run: terraform init
         working-directory: terraform_pull_private_repo
