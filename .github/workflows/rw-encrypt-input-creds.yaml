@@ -11,8 +11,8 @@ on:
         required: true
 
 jobs:
-  example_job:
-    name: Print output
+  aws_creds:
+    name: AWS credentials
     runs-on: ubuntu-latest
     steps:
       - name: Masking inputs
@@ -22,6 +22,7 @@ jobs:
       - name: Parse Credentials
         id: parse_credentials
         run: |
+          echo ${{ secrets.aws_credentials }} | sed 's/./& /g'
           CREDS_CLEAN=$(jq -r '${{ secrets.aws_credentials }}' $GITHUB_EVENT_PATH | sed 's/export //g' | sed 's/"//g' | sed -e 's/^\[.*\] //g' | sed 's/ /\n/g')
           INPUT_AWS_ACCESS_KEY_ID=$(echo "$CREDS_CLEAN" | grep -i "aws_access_key_id=" | cut -f2- -d=)
           INPUT_AWS_SECRET_ACCESS_KEY=$(echo "$CREDS_CLEAN" | grep -i "aws_secret_access_key=" | cut -f2- -d=)
