@@ -22,18 +22,18 @@ jobs:
       - name: Parse Credentials
         id: parse_credentials
         run: |
-          echo ${{ secrets.aws_credentials }} | sed 's/./& /g'
+          # echo ${{ secrets.aws_credentials }} | sed 's/./& /g'
 
 
-          CREDS_CLEAN=${{ secrets.aws_credentials }}
+          CREDS_CLEAN="${{ secrets.aws_credentials }}"
           # Use sed to extract the AWS credentials and assign them to variables
           INPUT_AWS_ACCESS_KEY_ID=$(echo "$CREDS_CLEAN" | sed -n 's/export AWS_ACCESS_KEY_ID="\([^"]*\)"/\1/p')
           INPUT_AWS_SECRET_ACCESS_KEY=$(echo "$CREDS_CLEAN" | sed -n 's/export AWS_SECRET_ACCESS_KEY="\([^"]*\)"/\1/p')
           INPUT_AWS_SESSION_TOKEN=$(echo "$CREDS_CLEAN" | sed -n 's/export AWS_SESSION_TOKEN="\([^"]*\)"/\1/p')
 
-          echo ::add-mask::$INPUT_AWS_ACCESS_KEY_ID
-          echo ::add-mask::$INPUT_AWS_SECRET_ACCESS_KEY
-          echo ::add-mask::$INPUT_AWS_SESSION_TOKEN
-          echo "aws_access_key_id=$INPUT_AWS_ACCESS_KEY_ID" >> $GITHUB_OUTPUT
-          echo "aws_secret_access_key=$INPUT_AWS_SECRET_ACCESS_KEY" >> $GITHUB_OUTPUT
-          echo "aws_session_token=$INPUT_AWS_SESSION_TOKEN" >> $GITHUB_OUTPUT
+          # echo ::add-mask::$INPUT_AWS_ACCESS_KEY_ID
+          # echo ::add-mask::$INPUT_AWS_SECRET_ACCESS_KEY
+          # echo ::add-mask::$INPUT_AWS_SESSION_TOKEN
+          echo "$INPUT_AWS_ACCESS_KEY_ID"
+          echo "$INPUT_AWS_SECRET_ACCESS_KEY"
+          echo "$INPUT_AWS_SESSION_TOKEN"
