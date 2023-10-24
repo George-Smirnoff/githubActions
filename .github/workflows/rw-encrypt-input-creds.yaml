@@ -1,0 +1,34 @@
+name: Reusable workflow
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+    secrets:
+      aws_credentials:
+        required: true
+
+jobs:
+  example_job:
+    name: Print output
+    runs-on: ubuntu-latest
+    steps:
+      - name: Masking inputs
+        run: |
+          echo "::add-mask::${{ secrets.aws_credentials }}"
+
+      - name: Parse Credentials
+        id: parse_credentials
+        run: |
+          CREDS_CLEAN=$(jq -r '${{ secrets.aws_credentials }}' $GITHUB_EVENT_PATH | sed 's/export //g' | sed 's/"//g' | sed -e 's/^\[.*\] //g' | sed 's/ /\n/g')
+          INPUT_AWS_ACCESS_KEY_ID=$(echo "$CREDS_CLEAN" | grep -i "aws_access_key_id=" | cut -f2- -d=)
+          INPUT_AWS_SECRET_ACCESS_KEY=$(echo "$CREDS_CLEAN" | grep -i "aws_secret_access_key=" | cut -f2- -d=)
+          INPUT_AWS_SESSION_TOKEN=$(echo "$CREDS_CLEAN" | grep -i "aws_session_token=" | cut -f2- -d=)
+          echo ::add-mask::$INPUT_AWS_ACCESS_KEY_ID
+          echo ::add-mask::$INPUT_AWS_SECRET_ACCESS_KEY
+          echo ::add-mask::$INPUT_AWS_SESSION_TOKEN
+          echo "aws_access_key_id=$INPUT_AWS_ACCESS_KEY_ID" >> $GITHUB_OUTPUT
+          echo "aws_secret_access_key=$INPUT_AWS_SECRET_ACCESS_KEY" >> $GITHUB_OUTPUT
+          echo "aws_session_token=$INPUT_AWS_SESSION_TOKEN" >> $GITHUB_OUTPUT

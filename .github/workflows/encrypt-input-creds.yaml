@@ -1,0 +1,27 @@
+name: Call a reusable workflow and encrypt AWS creds
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws_credentials:
+        description: AWS programmatic access credentials
+        required: true
+        type: string
+      env:
+        type: choice
+        description: Select target account
+        options:
+        - BI
+        - Corporate
+        - Management
+        - Production
+        - Security
+
+jobs:
+  job1:
+    uses: ./.github/workflows/rw-encrypt-input-creds.yaml
+    with:
+      env: ${{ inputs.env }}
+    secrets:
+      aws_credentials: ${{ inputs.aws_credentials }}
+    
