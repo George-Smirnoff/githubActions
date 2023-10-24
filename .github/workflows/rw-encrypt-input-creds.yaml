@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Masking inputs
         run: |
-          echo "::add-mask::${{ secrets.aws_credentials }}"
+          echo '::add-mask::${{ secrets.aws_credentials }}'
 
       - name: Parse Credentials
         id: parse_credentials
