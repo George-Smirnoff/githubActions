@@ -17,19 +17,25 @@ jobs:
     steps:
       - name: Masking inputs
         run: |
-          echo '::add-mask::${{ secrets.aws_credentials }}'
+          CREDS_CLEAN="${{ secrets.aws_credentials }}"
+
+          # echo "::add-mask::$CREDS_CLEAN"
 
       - name: Parse Credentials
         id: parse_credentials
         run: |
           # echo ${{ secrets.aws_credentials }} | sed 's/./& /g'
+          # echo "Check: $CREDS_CLEAN" # EMPTY
 
+          CREDS_CLEAN='${{ secrets.aws_credentials }}'
 
-          CREDS_CLEAN="${{ secrets.aws_credentials }}"
-          # Use sed to extract the AWS credentials and assign them to variables
-          INPUT_AWS_ACCESS_KEY_ID=$(echo "$CREDS_CLEAN" | sed -n 's/export AWS_ACCESS_KEY_ID="\([^"]*\)"/\1/p')
-          INPUT_AWS_SECRET_ACCESS_KEY=$(echo "$CREDS_CLEAN" | sed -n 's/export AWS_SECRET_ACCESS_KEY="\([^"]*\)"/\1/p')
-          INPUT_AWS_SESSION_TOKEN=$(echo "$CREDS_CLEAN" | sed -n 's/export AWS_SESSION_TOKEN="\([^"]*\)"/\1/p')
+          echo "First line"
+          # echo $CREDS_CLEAN >> /tmp/temp-file.txt
+          echo "Last line"
+          # Use regex to extract AWS credentials
+          INPUT_AWS_ACCESS_KEY_ID=$(echo "$CREDS_CLEAN" | grep -oP 'AWS_ACCESS_KEY_ID="\K[^"]+')
+          INPUT_AWS_SECRET_ACCESS_KEY=$(echo "$CREDS_CLEAN" | grep -oP 'AWS_SECRET_ACCESS_KEY="\K[^"]+')
+          INPUT_AWS_SESSION_TOKEN=$(echo "$CREDS_CLEAN" | grep -oP 'AWS_SESSION_TOKEN="\K[^"]+')
 
           # echo ::add-mask::$INPUT_AWS_ACCESS_KEY_ID
           # echo ::add-mask::$INPUT_AWS_SECRET_ACCESS_KEY
@@ -37,3 +43,6 @@ jobs:
           echo "$INPUT_AWS_ACCESS_KEY_ID"
           echo "$INPUT_AWS_SECRET_ACCESS_KEY"
           echo "$INPUT_AWS_SESSION_TOKEN"
+
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
