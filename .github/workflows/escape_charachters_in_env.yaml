@@ -1,0 +1,16 @@
+name: Monthly issue metrics
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    name: Escape charachters
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: "echo 'The encrypted password: ${{ env.TF_VAR_pritunl_new_encrypted_password }}' > /tmp/password"
+      env:
+        TF_VAR_pritunl_new_encrypted_password: ${{ secrets.PRITUNL_NEW_ENCRYPTED_PASSWORD }}
+
+    - uses: mxschmitt/action-tmate@v3
